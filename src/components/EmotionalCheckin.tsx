@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ interface Props {
 
 const EmotionalCheckin = ({ onClose }: Props) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [selected, setSelected] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -30,10 +32,13 @@ const EmotionalCheckin = ({ onClose }: Props) => {
     setSaving(false);
     if (error) {
       toast.error("Erro ao guardar");
-    } else {
-      toast.success("Obrigado por partilhar como se sente!");
-      setTimeout(onClose, 1200);
+      return;
     }
+    toast.success("Obrigado por partilhar como se sente!");
+    setTimeout(() => {
+      onClose();
+      navigate(`/humor/${mood}`);
+    }, 700);
   };
 
   return (
@@ -44,10 +49,11 @@ const EmotionalCheckin = ({ onClose }: Props) => {
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-card-foreground">Como se sente hoje?</h3>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground" aria-label="Fechar">
           <X className="h-5 w-5" />
         </button>
       </div>
+      <p className="text-xs text-muted-foreground mb-4">Toque num emoji — receberá uma mensagem para si.</p>
       <div className="flex gap-3 justify-center flex-wrap">
         {moods.map((m) => (
           <motion.button

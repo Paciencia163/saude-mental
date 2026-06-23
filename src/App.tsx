@@ -11,6 +11,10 @@ import Login from "./pages/Login";
 import Registar from "./pages/Registar";
 import Dashboard from "./pages/Dashboard";
 import Chat from "./pages/Chat";
+import Medicos from "./pages/Medicos";
+import Humor from "./pages/Humor";
+import Admin from "./pages/Admin";
+import AdminAccess from "./pages/AdminAccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +33,10 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/avaliacao" element={<Avaliacao />} />
+            <Route path="/medicos" element={<Medicos />} />
+            <Route path="/humor/:mood" element={<Humor />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/area-restrita" element={<AdminAccess />} />
             <Route path="/sobre" element={<Sobre />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

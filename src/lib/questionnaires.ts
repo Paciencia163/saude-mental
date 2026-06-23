@@ -10,24 +10,59 @@ export const RESPONSE_OPTIONS = [
 
 export const PHQ9_QUESTIONS = [
   "Pouco interesse ou prazer em fazer as coisas",
-  "Sentir-se para baixo, deprimido(a) ou sem esperança",
+  "Sentir-se para baixo ou deprimido(a)",
+  "Sentir-se sem esperança ou desmotivado(a)",
   "Dificuldade para dormir ou dormir demais",
   "Sentir-se cansado(a) ou com pouca energia",
   "Falta de apetite ou comer demais",
-  "Sentir-se mal consigo mesmo(a) — ou sentir que é um fracasso ou que decepcionou a sua família",
-  "Dificuldade para se concentrar nas coisas, como ler o jornal ou ver televisão",
-  "Mover-se ou falar tão devagar que as outras pessoas notaram? Ou o contrário — Loss agitado(a) que se movimentou muito mais do que o normal",
-  "Pensamentos de que seria melhor estar morto(a) ou de se machucar de alguma forma",
+  "Sentir-se mal consigo mesmo(a) ou sentir que é um fracasso",
+  "Dificuldade em concentrar-se (ler, ver televisão, trabalhar)",
+  "Mover-se ou falar muito devagar — ou, pelo contrário, estar muito agitado(a)",
+  "Pensamentos de que seria melhor estar morto(a) ou de se magoar",
 ];
 
 export const GAD7_QUESTIONS = [
   "Sentir-se nervoso(a), ansioso(a) ou muito tenso(a)",
   "Não ser capaz de impedir ou de controlar as preocupações",
-  "Preocupar-se muito com diversas coisas",
+  "Preocupar-se demais com diversas coisas",
   "Dificuldade para relaxar",
   "Ficar tão agitado(a) que se torna difícil permanecer sentado(a)",
   "Ficar facilmente aborrecido(a) ou irritável",
-  "Sentir medo como se algo terrível pudesse acontecer",
+  "Sentir medo, como se algo terrível pudesse acontecer",
+];
+
+// Reflection / open-ended questions — para acolher e ajudar o utilizador a abrir-se
+export interface ReflectionQuestion {
+  id: string;
+  question: string;
+  placeholder: string;
+  options?: string[]; // múltipla escolha opcional
+}
+
+export const REFLECTION_QUESTIONS: ReflectionQuestion[] = [
+  {
+    id: "anxiety_cause",
+    question: "O que tem causado mais ansiedade em ti ultimamente?",
+    placeholder: "Ex: trabalho, família, estudos, dinheiro, saúde...",
+    options: ["Trabalho", "Estudos", "Família", "Relacionamentos", "Dinheiro", "Saúde", "Futuro", "Outro"],
+  },
+  {
+    id: "coping",
+    question: "O que costumas fazer para controlar a ansiedade ou sentir-te melhor?",
+    placeholder: "Ex: respirar fundo, caminhar, conversar com alguém, ouvir música...",
+    options: ["Respiração / relaxamento", "Exercício físico", "Conversar com alguém", "Música / leitura", "Oração / fé", "Nada — não sei como", "Outro"],
+  },
+  {
+    id: "support",
+    question: "Tens alguém de confiança com quem podes falar quando te sentes mal?",
+    placeholder: "Conta um pouco sobre essa pessoa, se quiseres",
+    options: ["Sim, família", "Sim, amigos", "Sim, um(a) profissional", "Não tenho ninguém", "Prefiro não dizer"],
+  },
+  {
+    id: "hope",
+    question: "O que te faz sentir esperança ou bem, mesmo nos dias difíceis?",
+    placeholder: "Pequenas coisas também contam: uma música, uma pessoa, um lugar...",
+  },
 ];
 
 export type SeverityLevel = "normal" | "leve" | "moderado" | "moderado_grave" | "grave";
@@ -109,8 +144,30 @@ export function getAnxietySeverity(score: number): SeverityResult {
   };
 }
 
-export const ANGOLA_SUPPORT_CONTACTS = [
-  { name: "Linha de Apoio Psicológico", phone: "+244 923 000 000", description: "Apoio psicológico gratuito" },
-  { name: "Hospital Psiquiátrico de Luanda", phone: "+244 222 000 000", description: "Serviços de saúde mental" },
-  { name: "Ordem dos Psicólogos de Angola", phone: "", description: "Referências para profissionais qualificados" },
+export interface SupportContact {
+  name: string;
+  province: string;
+  phone: string;
+  description?: string;
+}
+
+export const SUPPORT_CENTER = {
+  name: "Centro de Suporte MenteSã",
+  email: "apoio@mentesa.ao",
+  phone: "+244 923 000 111",
+  hours: "Segunda a Sábado, 08:00 — 20:00",
+};
+
+export const ANGOLA_SUPPORT_CONTACTS: SupportContact[] = [
+  { province: "Luanda", name: "Linha de Apoio Psicológico de Luanda", phone: "+244 923 000 000", description: "Apoio psicológico gratuito" },
+  { province: "Luanda", name: "Hospital Psiquiátrico de Luanda", phone: "+244 222 000 000", description: "Serviços de saúde mental" },
+  { province: "Benguela", name: "Hospital Geral de Benguela — Saúde Mental", phone: "+244 272 232 100", description: "Consultas e urgências" },
+  { province: "Huíla", name: "Hospital Central do Lubango", phone: "+244 261 220 350", description: "Saúde mental e psiquiatria" },
+  { province: "Huambo", name: "Hospital Central do Huambo", phone: "+244 241 220 400", description: "Apoio psicológico e psiquiátrico" },
+  { province: "Cabinda", name: "Hospital Provincial de Cabinda", phone: "+244 231 222 100", description: "Serviços de saúde mental" },
+  { province: "Namibe", name: "Hospital Provincial do Namibe", phone: "+244 264 260 200", description: "Consultas de saúde mental" },
+  { province: "Malanje", name: "Hospital Provincial de Malanje", phone: "+244 251 220 100", description: "Saúde mental" },
+  { province: "Bié", name: "Hospital Provincial do Kuito", phone: "+244 248 222 050", description: "Apoio psicológico" },
+  { province: "Uíge", name: "Hospital Provincial do Uíge", phone: "+244 232 220 300", description: "Saúde mental" },
+  { province: "Nacional", name: "Ordem dos Psicólogos de Angola", phone: "+244 222 444 555", description: "Referências para profissionais qualificados em todo o país" },
 ];

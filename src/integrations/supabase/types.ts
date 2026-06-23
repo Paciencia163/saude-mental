@@ -77,6 +77,51 @@ export type Database = {
         }
         Relationships: []
       }
+      doctors: {
+        Row: {
+          available: boolean
+          bio: string | null
+          city: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          photo_url: string | null
+          province: string
+          specialty: string
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          photo_url?: string | null
+          province: string
+          specialty: string
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          photo_url?: string | null
+          province?: string
+          specialty?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       emotional_checkins: {
         Row: {
           created_at: string

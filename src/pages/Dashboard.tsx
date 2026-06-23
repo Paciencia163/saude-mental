@@ -208,9 +208,16 @@ const ProfessionalDashboard = ({ role }: { role: string }) => {
 
       {/* Admin: manage roles */}
       {role === "admin" && (
-        <div className="mb-8 rounded-2xl border border-primary/20 bg-primary/5 p-4">
-          <p className="text-sm text-foreground font-semibold">👑 Administrador — Pode gerir utilizadores e atribuir papéis</p>
-        </div>
+        <Link
+          to="/admin"
+          className="mb-8 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/10 p-5 hover:bg-primary/15 transition-colors"
+        >
+          <div>
+            <p className="font-bold text-foreground">👑 Painel do Administrador</p>
+            <p className="text-sm text-muted-foreground">Gerir médicos, avaliações, utilizadores e papéis</p>
+          </div>
+          <span className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground">Abrir →</span>
+        </Link>
       )}
 
       {/* Patients Table */}

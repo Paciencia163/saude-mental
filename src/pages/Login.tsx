@@ -99,6 +99,31 @@ const Login = () => {
               Registe-se aqui
             </Link>
           </p>
+
+          {/* Demo credentials */}
+          <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-xs">
+            <p className="font-bold text-foreground mb-2">🔑 Contas de demonstração</p>
+            <ul className="space-y-1.5 text-muted-foreground">
+              <li>
+                <span className="font-semibold text-foreground">Paciente:</span>{" "}
+                <code className="font-mono">paciente@mentesa.ao</code> / <code className="font-mono">paciente123</code>
+              </li>
+              <li>
+                <span className="font-semibold text-foreground">Profissional:</span>{" "}
+                <code className="font-mono">profissional@mentesa.ao</code> / <code className="font-mono">profissional123</code>
+              </li>
+              <li>
+                <span className="font-semibold text-foreground">Administrador:</span>{" "}
+                <code className="font-mono">admin@mentesa.ao</code> / <code className="font-mono">admin123</code>
+              </li>
+            </ul>
+            <p className="mt-3 text-[11px]">
+              🔒 Acesso de admin também disponível em{" "}
+              <Link to="/area-restrita" className="font-bold text-primary hover:underline">
+                /area-restrita
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

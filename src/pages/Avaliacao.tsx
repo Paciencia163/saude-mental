@@ -1,12 +1,13 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Download, RotateCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Download, RotateCcw, Heart } from "lucide-react";
 import Header from "@/components/Header";
 import QuestionCard from "@/components/QuestionCard";
 import ResultCard from "@/components/ResultCard";
 import {
   PHQ9_QUESTIONS,
   GAD7_QUESTIONS,
+  REFLECTION_QUESTIONS,
   getDepressionSeverity,
   getAnxietySeverity,
 } from "@/lib/questionnaires";
@@ -18,11 +19,12 @@ const ALL_QUESTIONS = [
 ];
 
 const Avaliacao = () => {
-  const [step, setStep] = useState<"intro" | "quiz" | "results">("intro");
+  const [step, setStep] = useState<"intro" | "quiz" | "reflection" | "results">("intro");
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<(number | undefined)[]>(
     new Array(ALL_QUESTIONS.length).fill(undefined)
   );
+  const [reflections, setReflections] = useState<Record<string, string>>({});
   const [userName, setUserName] = useState("");
 
   const handleSelect = useCallback(
@@ -59,6 +61,7 @@ const Avaliacao = () => {
     setStep("intro");
     setCurrentQ(0);
     setAnswers(new Array(ALL_QUESTIONS.length).fill(undefined));
+    setReflections({});
     setUserName("");
   };
 
@@ -143,13 +146,93 @@ const Avaliacao = () => {
                   </button>
                 ) : (
                   <button
-                    onClick={() => setStep("results")}
+                    onClick={() => setStep("reflection")}
                     disabled={!canFinish}
                     className="inline-flex items-center gap-1 rounded-lg bg-primary px-6 py-2 text-sm font-bold text-primary-foreground transition-colors disabled:opacity-30"
                   >
-                    Ver Resultados
+                    Continuar <ArrowRight className="h-4 w-4" />
                   </button>
                 )}
+              </div>
+            </motion.div>
+          )}
+
+          {step === "reflection" && (
+            <motion.div
+              key="reflection"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mx-auto max-w-2xl"
+            >
+              <div className="mb-6 text-center">
+                <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <Heart className="h-6 w-6 text-primary" fill="currentColor" />
+                </div>
+                <h2 className="text-2xl font-bold text-foreground mb-1">Um momento para si</h2>
+                <p className="text-sm text-muted-foreground">
+                  Estas perguntas são opcionais — partilhe apenas o que se sentir confortável. Estamos aqui para o(a) acolher.
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                {REFLECTION_QUESTIONS.map((rq) => (
+                  <div key={rq.id} className="rounded-2xl border border-border bg-card p-5">
+                    <label className="block text-sm font-bold text-card-foreground mb-3">
+                      {rq.question}
+                    </label>
+                    {rq.options && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {rq.options.map((opt) => {
+                          const current = reflections[rq.id] || "";
+                          const selected = current.split(", ").includes(opt);
+                          return (
+                            <button
+                              key={opt}
+                              type="button"
+                              onClick={() => {
+                                const parts = current ? current.split(", ").filter(Boolean) : [];
+                                const next = selected
+                                  ? parts.filter((p) => p !== opt)
+                                  : [...parts, opt];
+                                setReflections({ ...reflections, [rq.id]: next.join(", ") });
+                              }}
+                              className={`rounded-full border-2 px-3 py-1.5 text-xs font-semibold transition-all ${
+                                selected
+                                  ? "border-primary bg-primary text-primary-foreground"
+                                  : "border-border bg-background text-foreground hover:border-primary/50"
+                              }`}
+                            >
+                              {opt}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                    <textarea
+                      value={reflections[rq.id] || ""}
+                      onChange={(e) => setReflections({ ...reflections, [rq.id]: e.target.value })}
+                      placeholder={rq.placeholder}
+                      rows={2}
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 flex items-center justify-between">
+                <button
+                  onClick={() => setStep("quiz")}
+                  className="inline-flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent"
+                >
+                  <ArrowLeft className="h-4 w-4" /> Voltar
+                </button>
+                <button
+                  onClick={() => setStep("results")}
+                  className="inline-flex items-center gap-1 rounded-lg bg-primary px-6 py-2 text-sm font-bold text-primary-foreground"
+                >
+                  Ver Resultados <ArrowRight className="h-4 w-4" />
+                </button>
               </div>
             </motion.div>
           )}
@@ -205,21 +288,41 @@ const Avaliacao = () => {
                 </button>
               </div>
 
-              {/* Support contacts */}
+              {/* CTA: ver médicos */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-8 rounded-2xl border-2 border-primary bg-primary/5 p-6 text-center"
+              >
+                <h3 className="text-lg font-bold text-foreground mb-2">Não enfrente isto sozinho(a)</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Os nossos médicos e psicólogos estão disponíveis em várias províncias de Angola.
+                </p>
+                <a
+                  href="/medicos"
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-md hover:scale-105 transition-transform"
+                >
+                  Ver Médicos Disponíveis →
+                </a>
+              </motion.div>
+
+              {/* Support contacts (preview) — full list em /sobre */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="mt-10 rounded-2xl border border-border bg-card p-6"
+                className="mt-6 rounded-2xl border border-border bg-card p-6"
               >
                 <h3 className="mb-4 text-lg font-bold text-card-foreground">
                   📞 Contactos de Apoio em Angola
                 </h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• <strong>Linha de Apoio Psicológico:</strong> +244 923 000 000</li>
-                  <li>• <strong>Hospital Psiquiátrico de Luanda</strong></li>
-                  <li>• <strong>Ordem dos Psicólogos de Angola</strong> — Referências para profissionais qualificados</li>
-                </ul>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Linhas de apoio em várias províncias: Luanda, Benguela, Huíla, Huambo, Cabinda, Namibe, Malanje, Bié e Uíge.
+                </p>
+                <a href="/sobre" className="text-sm font-bold text-primary hover:underline">
+                  Ver lista completa por província →
+                </a>
               </motion.div>
             </motion.div>
           )}

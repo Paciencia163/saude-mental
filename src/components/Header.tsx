@@ -11,6 +11,15 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
         <Link to="/" className="flex items-center gap-2">
+          {/* Angola flag */}
+          <span
+            className="inline-flex h-5 w-7 overflow-hidden rounded-sm border border-border shadow-sm"
+            aria-label="Bandeira de Angola"
+            title="Angola"
+          >
+            <span className="flex-1 bg-[#CE1126]" />
+            <span className="flex-1 bg-[#000000]" />
+          </span>
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
             <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
           </div>
@@ -22,6 +31,7 @@ const Header = () => {
           {[
             { path: "/", label: "Início" },
             { path: "/avaliacao", label: "Avaliação" },
+            { path: "/medicos", label: "Médicos" },
             { path: "/sobre", label: "Sobre" },
           ].map(({ path, label }) => (
             <Link
